@@ -1,0 +1,36 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Pour permettre le déclenchement manuel
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Vérification du code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configuration de l'environnement Java
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # Distribution JDK recommandée
+          java-version: '17' # Version de Java (adapter si besoin)
+
+      # 3. Installation des dépendances
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
+
+      # 4. Compilation et exécution des tests
+      - name: Build and test
+        run: mvn clean test
