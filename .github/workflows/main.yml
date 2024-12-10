@@ -16,7 +16,8 @@ jobs:
           POSTGRES_DB: ${{secrets.DB_USER}}
           POSTGRES_USER: ${{secrets.DB_NAME}}
           POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
-          
+        ports:
+          - 5432:5432
     steps:
       # 1. Vérification du code
       - name: Checkout code
